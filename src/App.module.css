@@ -1,0 +1,37 @@
+.shell {
+  width: min(1480px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 18px 0 32px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(320px, 440px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.previewPanel {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.72fr) minmax(360px, 1fr);
+  gap: 20px;
+  min-width: 0;
+}
+
+@media (max-width: 1180px) {
+  .workspace,
+  .previewPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .previewPanel {
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 680px) {
+  .shell {
+    width: min(100vw - 20px, 620px);
+    padding-top: 12px;
+  }
+}

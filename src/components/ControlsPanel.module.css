@@ -1,0 +1,147 @@
+.panel {
+  display: grid;
+  gap: 0;
+  overflow: visible;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.group {
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 250, 251, 0.52));
+}
+
+.group:last-child {
+  border-bottom: 0;
+}
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  letter-spacing: 0;
+}
+
+.ghostButton {
+  min-height: 34px;
+  padding: 0 12px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.ghostButton:hover {
+  transform: translateY(-1px);
+  border-color: var(--coral);
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 14px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff3f6;
+}
+
+.segmented label {
+  min-width: 0;
+}
+
+.segmentedRadio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmentedLabel {
+  display: grid;
+  place-items: center;
+  min-height: 38px;
+  border-radius: 6px;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.segmentedLabel[data-checked="true"] {
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 0 8px 18px rgba(216, 117, 140, 0.16);
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.field span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.textInput,
+.select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font: inherit;
+}
+
+.textInput:focus,
+.select:focus {
+  outline: 3px solid rgba(216, 117, 140, 0.18);
+  border-color: var(--coral);
+}
+
+.swatchStrip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.swatch {
+  height: 34px;
+  border: 1px solid rgba(32, 33, 36, 0.16);
+  border-radius: 8px;
+}
+
+@media (max-width: 680px) {
+  .fieldRow,
+  .segmented {
+    grid-template-columns: 1fr;
+  }
+}

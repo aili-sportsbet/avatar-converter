@@ -5,3 +5,7 @@ dist/
 build/
 .env
 .env.*
+
+# Legacy files (kept for reference, not used by the new build)
+app.js
+styles.css
