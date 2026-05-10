@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Headshot Prompt Studio</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Prompt Studio</p>
+          <h1>Headshot & Avatar Converter</h1>
+        </div>
+        <div class="top-actions" aria-label="Prompt actions">
+          <button class="icon-button" id="randomizeButton" type="button" title="Randomize">
+            <span aria-hidden="true">R</span>
+            <span class="sr-only">Randomize</span>
+          </button>
+          <button class="primary-button" id="copyButton" type="button">Copy Prompt</button>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="Prompt generator workspace">
+        <aside class="controls-panel" aria-label="Prompt controls">
+          <div class="control-group">
+            <div class="group-head">
+              <h2>Format</h2>
+              <button class="ghost-button" id="resetButton" type="button">Reset</button>
+            </div>
+            <div class="segmented-control" role="radiogroup" aria-label="Image type">
+              <label>
+                <input type="radio" name="format" value="professional headshot" checked>
+                <span>Headshot</span>
+              </label>
+              <label>
+                <input type="radio" name="format" value="profile avatar">
+                <span>Avatar</span>
+              </label>
+              <label>
+                <input type="radio" name="format" value="founder portrait">
+                <span>Founder</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2>Style</h2>
+            <div class="style-grid" id="styleGrid" aria-label="Style choices"></div>
+          </div>
+
+          <div class="control-group">
+            <h2>Subject</h2>
+            <label class="field">
+              <span>Target vibe</span>
+              <input id="identityInput" type="text" value="confident startup founder" maxlength="80">
+            </label>
+            <div class="field-row">
+              <label class="field">
+                <span>Expression</span>
+                <select id="expressionSelect">
+                  <option>calm smile</option>
+                  <option>warm approachable smile</option>
+                  <option>focused neutral expression</option>
+                  <option>bright energetic smile</option>
+                  <option>subtle confident smirk</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Wardrobe</span>
+                <select id="wardrobeSelect">
+                  <option>tailored navy blazer</option>
+                  <option>minimal black turtleneck</option>
+                  <option>white shirt and charcoal jacket</option>
+                  <option>creative smart casual outfit</option>
+                  <option>soft knit top with clean lines</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2>Scene</h2>
+            <div class="field-row">
+              <label class="field">
+                <span>Background</span>
+                <select id="backgroundSelect">
+                  <option>soft studio gray backdrop</option>
+                  <option>warm office interior</option>
+                  <option>clean white seamless backdrop</option>
+                  <option>muted city window bokeh</option>
+                  <option>subtle brand-color gradient backdrop</option>
+                  <option>editorial paper backdrop</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Lighting</span>
+                <select id="lightingSelect">
+                  <option>large softbox key light</option>
+                  <option>natural window light</option>
+                  <option>cinematic rim light</option>
+                  <option>even beauty lighting</option>
+                  <option>golden-hour side light</option>
+                </select>
+              </label>
+            </div>
+            <div class="swatch-strip" id="paletteStrip" aria-label="Color palette"></div>
+          </div>
+
+          <div class="control-group">
+            <h2>Details</h2>
+            <label class="range-field">
+              <span>Face match</span>
+              <input id="faceMatchRange" type="range" min="1" max="10" value="9">
+              <output id="faceMatchValue">9</output>
+            </label>
+            <label class="range-field">
+              <span>Pose lock</span>
+              <input id="poseLockRange" type="range" min="1" max="10" value="7">
+              <output id="poseLockValue">7</output>
+            </label>
+            <label class="range-field">
+              <span>Realism</span>
+              <input id="realismRange" type="range" min="1" max="10" value="8">
+              <output id="realismValue">8</output>
+            </label>
+            <label class="range-field">
+              <span>Polish</span>
+              <input id="polishRange" type="range" min="1" max="10" value="7">
+              <output id="polishValue">7</output>
+            </label>
+            <label class="range-field">
+              <span>Approachability</span>
+              <input id="approachRange" type="range" min="1" max="10" value="6">
+              <output id="approachValue">6</output>
+            </label>
+            <label class="range-field">
+              <span>Creativity</span>
+              <input id="creativeRange" type="range" min="1" max="10" value="4">
+              <output id="creativeValue">4</output>
+            </label>
+          </div>
+        </aside>
+
+        <section class="preview-panel" aria-label="Prompt preview">
+          <div class="preview-card">
+            <div class="portrait-stage" id="portraitStage">
+              <div class="portrait-orbit"></div>
+              <div class="portrait" id="portraitIllustration" aria-hidden="true">
+                <div class="hair"></div>
+                <div class="head">
+                  <div class="brow left"></div>
+                  <div class="brow right"></div>
+                  <div class="eye left"></div>
+                  <div class="eye right"></div>
+                  <div class="nose"></div>
+                  <div class="mouth"></div>
+                </div>
+                <div class="neck"></div>
+                <div class="shirt"></div>
+                <div class="jacket"></div>
+              </div>
+            </div>
+            <div class="prompt-meta">
+              <div>
+                <span class="meta-label">Style</span>
+                <strong id="styleName">Studio Executive</strong>
+              </div>
+              <div>
+                <span class="meta-label">Ratio</span>
+                <strong id="ratioText">4:5</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="output-panel">
+            <div class="tabs" role="tablist" aria-label="Prompt tabs">
+              <button class="tab active" id="promptTab" type="button" role="tab" aria-selected="true">Prompt</button>
+              <button class="tab" id="negativeTab" type="button" role="tab" aria-selected="false">Negative</button>
+            </div>
+            <textarea id="promptOutput" readonly spellcheck="false" aria-label="Generated prompt"></textarea>
+            <div class="output-footer">
+              <label class="toggle">
+                <input id="modelSyntaxToggle" type="checkbox">
+                <span>Model syntax</span>
+              </label>
+              <span id="copyStatus" class="copy-status" role="status" aria-live="polite"></span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
