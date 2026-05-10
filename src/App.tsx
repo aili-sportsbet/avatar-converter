@@ -1,12 +1,27 @@
 import { useState, useCallback, useMemo } from "react";
 import type { ControlValues, PromptTab, StylePreset } from "./types";
-import { styles as stylePresets, defaultControls, identities, expressions, wardrobes, backgrounds, lightings } from "./data/styles";
+import {
+  accessories,
+  backgrounds,
+  cameras,
+  defaultControls,
+  expressions,
+  framings,
+  hairDetails,
+  identities,
+  lightings,
+  makeupStyles,
+  skinTextures,
+  styles as stylePresets,
+  wardrobes,
+} from "./data/styles";
 import { usePromptBuilder } from "./hooks/usePromptBuilder";
 import { useClipboard } from "./hooks/useClipboard";
 import { Header } from "./components/Header";
 import { ControlsPanel } from "./components/ControlsPanel";
 import { Portrait } from "./components/Portrait";
 import { OutputPanel } from "./components/OutputPanel";
+import { PromptGuidePage } from "./components/PromptGuidePage";
 import styles from "./App.module.css";
 
 function pickRandom<T>(arr: T[]): T {
@@ -18,11 +33,12 @@ function randomInRange(min: number, max: number): number {
 }
 
 export function App() {
+  const [currentPage, setCurrentPage] = useState<"studio" | "guide">("studio");
   const [selectedStyleId, setSelectedStyleId] = useState("studio");
   const [controls, setControls] = useState<ControlValues>(defaultControls);
   const [activeTab, setActiveTab] = useState<PromptTab>("prompt");
 
-  const { buildPrompt, buildNegativePrompt } = usePromptBuilder();
+  const { buildPrompt, buildNegativePrompt, buildPromptPackage } = usePromptBuilder();
   const { status: copyStatus, copy } = useClipboard();
 
   const selectedStyle = useMemo(
@@ -34,8 +50,11 @@ export function App() {
     if (activeTab === "prompt") {
       return buildPrompt(selectedStyle, controls);
     }
+    if (activeTab === "package") {
+      return buildPromptPackage(selectedStyle, controls);
+    }
     return buildNegativePrompt();
-  }, [activeTab, selectedStyle, controls, buildPrompt, buildNegativePrompt]);
+  }, [activeTab, selectedStyle, controls, buildPrompt, buildNegativePrompt, buildPromptPackage]);
 
   const updateControl = useCallback(
     <K extends keyof ControlValues>(key: K, value: ControlValues[K]) => {
@@ -68,15 +87,20 @@ export function App() {
       identity: pickRandom(identities),
       expression: pickRandom(expressions),
       wardrobe: pickRandom(wardrobes),
+      framing: pickRandom(framings),
+      camera: pickRandom(cameras),
       background: pickRandom(backgrounds),
       lighting: pickRandom(lightings),
+      skinTexture: pickRandom(skinTextures),
+      hairDetail: pickRandom(hairDetails),
+      makeup: pickRandom(makeupStyles),
+      accessories: pickRandom(accessories),
       faceMatch: randomInRange(8, 10),
       poseLock: randomInRange(5, 9),
       realism: randomInRange(6, 10),
       polish: randomInRange(5, 10),
       approach: randomInRange(4, 10),
       creative: randomInRange(2, 10),
-      modelSyntax: false,
     });
   }, []);
 
@@ -87,33 +111,36 @@ export function App() {
   return (
     <main className={styles.shell}>
       <Header
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
         onCopy={handleCopy}
         onRandomize={handleRandomize}
         copyStatus={copyStatus}
       />
 
-      <section className={styles.workspace} aria-label="Prompt generator workspace">
-        <ControlsPanel
-          presets={stylePresets}
-          selectedStyleId={selectedStyleId}
-          controls={controls}
-          onStyleSelect={handleStyleSelect}
-          onControlChange={updateControl}
-          onReset={handleReset}
-        />
-
-        <section className={styles.previewPanel} aria-label="Prompt preview">
-          <Portrait style={selectedStyle} approachValue={controls.approach} />
-          <OutputPanel
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            promptText={promptText}
-            modelSyntax={controls.modelSyntax}
-            onModelSyntaxChange={(v) => updateControl("modelSyntax", v)}
-            copyStatus={copyStatus}
+      {currentPage === "studio" ? (
+        <section className={styles.workspace} aria-label="Prompt generator workspace">
+          <ControlsPanel
+            presets={stylePresets}
+            selectedStyleId={selectedStyleId}
+            controls={controls}
+            onStyleSelect={handleStyleSelect}
+            onControlChange={updateControl}
+            onReset={handleReset}
           />
+
+          <div className={styles.bottomRow}>
+            <Portrait style={selectedStyle} approachValue={controls.approach} />
+            <OutputPanel
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              promptText={promptText}
+            />
+          </div>
         </section>
-      </section>
+      ) : (
+        <PromptGuidePage />
+      )}
     </main>
   );
 }

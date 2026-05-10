@@ -10,6 +10,17 @@ function descriptorFromValue(label: string, value: number): string {
 }
 
 export function usePromptBuilder() {
+  const buildNegativePrompt = useCallback((): string => {
+    return [
+      "avoid changing the person's identity",
+      "avoid a different face, different age, different ethnicity, different gender, celebrity likeness, or generic stock model",
+      "avoid distorted facial anatomy, warped face, uneven eyes, warped ears, asymmetrical teeth, or unnatural smile",
+      "avoid extra fingers, extra hands, extra limbs, malformed hands, cropped hands, phones, or handheld devices",
+      "avoid plastic-looking skin, waxy skin, unnaturally smooth skin, over-processed retouching, blurry details, or low-resolution output",
+      "avoid visible watermark, text, logo artifacts, busy background, harsh shadows, stock photo appearance, cropped chin, or cropped forehead",
+    ].join(", ");
+  }, []);
+
   const buildPrompt = useCallback(
     (style: StylePreset, controls: ControlValues): string => {
       const targetVibe = controls.identity.trim() || "professional profile";
@@ -21,42 +32,34 @@ export function usePromptBuilder() {
         "close to the original pose, framing, and facial angle",
         controls.poseLock,
       );
-
-      const details = [
-        `Transform the user's provided reference image into a ${controls.format} with a ${targetVibe} vibe`,
-        "use the reference image as the source identity, not as loose inspiration",
-        `${faceMatch}; preserve the person's facial structure, age impression, skin tone, hairstyle direction, and recognizable features`,
-        `${poseLock}; keep the original head angle, gaze direction, and crop unless the chosen style requires a subtle refinement`,
-        style.prompt,
-        `${controls.expression}, ${controls.wardrobe}`,
-        `${controls.background}, ${controls.lighting}`,
-        `${descriptorFromValue("realistic", controls.realism)}, ${descriptorFromValue("polished", controls.polish)}`,
-        `${descriptorFromValue("approachable", controls.approach)}, ${descriptorFromValue("creative", controls.creative)}`,
-        "sharp eyes, natural skin texture, balanced facial symmetry, flattering lens compression, professional color grading",
-        "do not change the person into a different model, celebrity, gender, ethnicity, or age",
-        `palette cues: ${style.palette.join(", ")}`,
-        `aspect ratio ${style.ratio}`,
-      ];
-
-      if (controls.modelSyntax) {
-        return `${details.join(", ")} --ar ${style.ratio} --style raw --v 6`;
-      }
-
-      return details.join(". ") + ".";
+      return [
+        `Subject: Transform the user's provided reference image into a ${controls.format} with a ${targetVibe} vibe. Use the reference image as the source identity, not as loose inspiration.`,
+        `Identity preservation: ${faceMatch}; maintain the exact facial structure, age impression, skin tone, hairstyle direction, and recognizable key features. Do not change the person into a different model, celebrity, gender, ethnicity, or age.`,
+        `Pose and framing: ${poseLock}; ${controls.framing}; keep the original head angle and gaze direction unless the chosen style requires a subtle refinement.`,
+        `Clothing and styling: ${controls.wardrobe}; ${controls.hairDetail}; ${controls.makeup}; ${controls.accessories}.`,
+        `Face detail: ${controls.expression}; ${controls.skinTexture}; subtle catchlights in the eyes; balanced facial symmetry; observe crisp detail, not waxy or over-smoothed skin.`,
+        `Background and lighting: ${controls.background}; ${controls.lighting}; palette cues: ${style.palette.join(", ")}.`,
+        `Camera and quality: ${controls.camera}; ${descriptorFromValue("realistic", controls.realism)}; ${descriptorFromValue("polished", controls.polish)}; ${descriptorFromValue("approachable", controls.approach)}; ${descriptorFromValue("creative", controls.creative)}; ultra-realistic studio portrait, high-resolution, sharp focus, refined film grain, professional color grading.`,
+        `Style direction: ${style.prompt}. Aspect ratio ${style.ratio}.`,
+      ].join("\n\n");
     },
     [],
   );
 
-  const buildNegativePrompt = useCallback((): string => {
-    return [
-      "avoid changing the person's identity",
-      "avoid a different face, different age, different ethnicity, different gender, celebrity likeness, or generic stock model",
-      "avoid distorted facial anatomy",
-      "avoid extra fingers, warped ears, uneven eyes, plastic skin, heavy blur, harsh shadows",
-      "avoid over-smoothed retouching, visible watermark, text, logo artifacts, cropped chin, cropped forehead",
-      "avoid exaggerated smile unless requested, avoid busy background, avoid low-resolution details",
-    ].join(", ");
-  }, []);
+  const buildPromptPackage = useCallback(
+    (style: StylePreset, controls: ControlValues): string => {
+      return [
+        "POSITIVE PROMPT",
+        buildPrompt(style, controls),
+        "",
+        "NEGATIVE PROMPT",
+        buildNegativePrompt(),
+        "",
+        `ASPECT RATIO: ${style.ratio}`,
+      ].join("\n");
+    },
+    [buildNegativePrompt, buildPrompt],
+  );
 
-  return { buildPrompt, buildNegativePrompt };
+  return { buildPrompt, buildNegativePrompt, buildPromptPackage };
 }

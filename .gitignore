@@ -5,6 +5,7 @@ dist/
 build/
 .env
 .env.*
+.agents/
 
 # Legacy files (kept for reference, not used by the new build)
 app.js

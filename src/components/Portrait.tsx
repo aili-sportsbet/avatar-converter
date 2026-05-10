@@ -24,7 +24,6 @@ export function Portrait({ style, approachValue }: PortraitProps) {
           className={styles.portrait}
           aria-hidden="true"
           style={{
-            "--skinTone": style.palette[4],
             "--hairTone": hairTone,
             "--jacketTone": style.palette[2],
             "--shirtTone": style.palette[3],

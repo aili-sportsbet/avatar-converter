@@ -1,97 +1,226 @@
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  min-height: 82px;
-  margin: 0 0 14px;
-  padding: 14px 18px;
-  border: 1px solid rgba(234, 221, 228, 0.86);
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  min-height: 132px;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-5);
+  border: var(--border-ink);
   border-top: 0;
-  border-radius: 0 0 8px 8px;
-  background: rgba(255, 248, 250, 0.88);
-  box-shadow: 0 14px 34px rgba(88, 61, 77, 0.12);
-  backdrop-filter: blur(18px) saturate(1.2);
+  border-radius: 0 0 var(--radius-doodle-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-ink-md);
+  /* friendly little tape strip on the top edge */
+  background-image: repeating-linear-gradient(
+    -4deg,
+    var(--color-accent-yellow) 0 14px,
+    rgba(255, 214, 110, 0.6) 14px 22px
+  );
+  background-repeat: no-repeat;
+  background-size: 160px 10px;
+  background-position: 32px 0;
+}
+
+.brand {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
 }
 
 .eyebrow {
-  margin: 0 0 6px;
-  color: var(--coral);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: max-content;
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  color: var(--color-secondary);
+  font-size: var(--font-14);
+  font-family: var(--font-display);
+  box-shadow: var(--shadow-ink-xs);
+}
+
+.sparkle {
+  color: var(--color-primary-hover);
 }
 
 .title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
   margin: 0;
-  font-size: clamp(1.9rem, 3.2vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: 0;
+  font-size: clamp(var(--font-32), 4.4vw, 3rem);
+  line-height: 1.05;
+  color: var(--color-secondary);
+}
+
+.titleAccent {
+  position: relative;
+  padding: 0 var(--space-2);
+  color: var(--color-primary-hover);
+}
+
+.titleAccent::before {
+  /* hand-drawn squiggly underline doodle */
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: -8px;
+  height: 10px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'><path d='M2 8 Q 25 2 50 7 T 100 7 T 150 7 T 198 7' fill='none' stroke='%23FFD66E' stroke-width='4' stroke-linecap='round'/></svg>");
+}
+
+.headerControls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.pageNav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: var(--border-ink);
+  border-radius: var(--radius-pill);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-ink-xs);
+}
+
+.navButton {
+  min-height: 38px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-muted-strong);
+  font-family: var(--font-display);
+  font-size: var(--font-16);
+  transition:
+    transform var(--motion-fast),
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+
+.navButton:hover {
+  color: var(--color-secondary);
+  background: var(--color-secondary-soft);
+}
+
+.navButton[data-active="true"] {
+  background: var(--color-secondary);
+  color: var(--color-paper-warm);
+  box-shadow: var(--shadow-ink-xs);
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-3);
   flex: 0 0 auto;
 }
 
 .iconButton {
-  width: 42px;
-  min-height: 42px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
   padding: 0;
-  font-weight: 900;
-  color: #9f607b;
-  background: #fff4f7;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 160ms ease, border-color 160ms ease;
+  color: var(--color-secondary);
+  background: var(--color-accent-yellow);
+  border: var(--border-ink);
+  border-radius: var(--radius-doodle-sm);
+  box-shadow: var(--shadow-ink-sm);
+  transition:
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast);
 }
 
 .iconButton:hover {
-  transform: translateY(-1px);
-  border-color: var(--coral);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-ink-xs);
+}
+
+.iconButton:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-ink);
 }
 
 .primaryButton {
-  min-height: 42px;
-  padding: 0 18px;
-  border: 1px solid #b85f76;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #d8758c, #9f607b);
-  color: #ffffff;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 10px 22px rgba(216, 117, 140, 0.24);
-  transition: transform 160ms ease, border-color 160ms ease;
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  color: var(--color-surface);
+  background: var(--color-primary);
+  border: var(--border-ink);
+  border-radius: var(--radius-doodle-sm);
+  font-family: var(--font-display);
+  font-size: var(--font-16);
+  box-shadow: var(--shadow-ink-md);
+  transition:
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast),
+    background var(--motion-fast);
 }
 
 .primaryButton:hover {
-  transform: translateY(-1px);
-  border-color: var(--coral);
+  background: var(--color-primary-hover);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-ink-sm);
+}
+
+.primaryButton:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--color-ink);
 }
 
 .copyStatus {
-  min-width: 86px;
-  color: #a55168;
-  font-size: 0.86rem;
-  font-weight: 900;
+  min-width: 84px;
+  color: var(--color-success);
+  font-size: var(--font-14);
   text-align: right;
+  /* keep slot reserved so layout doesn't jump */
+  min-height: 1em;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .topbar {
     align-items: flex-start;
     flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .headerControls {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .actions {
+    flex: 1;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 520px) {
+  .pageNav {
     width: 100%;
+    justify-content: stretch;
+  }
+
+  .navButton {
+    flex: 1;
   }
 
   .primaryButton {

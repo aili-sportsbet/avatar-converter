@@ -1,64 +1,76 @@
 .panel {
   display: grid;
-  gap: 0;
-  overflow: visible;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
 }
 
-.group {
-  padding: 18px;
-  border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 250, 251, 0.52));
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
 }
 
-.group:last-child {
-  border-bottom: 0;
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-ink);
+  border-radius: var(--radius-doodle-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-ink-sm);
+  flex: 1;
 }
 
-.groupHead {
+.section:nth-child(odd) {
+  background: var(--color-paper);
+}
+
+.sectionHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-2);
 }
 
 .heading {
   margin: 0;
-  font-size: 0.92rem;
-  text-transform: uppercase;
-  color: var(--charcoal);
-  letter-spacing: 0;
+  font-family: var(--font-display);
+  font-size: var(--font-24);
+  color: var(--color-secondary);
 }
 
 .ghostButton {
-  min-height: 34px;
-  padding: 0 12px;
-  color: var(--muted);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.82);
-  cursor: pointer;
-  transition: transform 160ms ease, border-color 160ms ease;
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--font-14);
+  color: var(--color-secondary);
+  background: var(--color-paper-warm);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-ink-xs);
+  transition:
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast);
 }
 
 .ghostButton:hover {
-  transform: translateY(-1px);
-  border-color: var(--coral);
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--color-ink);
+  background: var(--color-accent-yellow);
 }
 
+/* --- Segmented control --- */
 .segmented {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 14px;
-  padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fff3f6;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-pill);
+  background: var(--color-secondary-soft);
 }
 
 .segmented label {
@@ -67,6 +79,8 @@
 
 .segmentedRadio {
   position: absolute;
+  width: 1px;
+  height: 1px;
   opacity: 0;
   pointer-events: none;
 }
@@ -74,74 +88,116 @@
 .segmentedLabel {
   display: grid;
   place-items: center;
-  min-height: 38px;
-  border-radius: 6px;
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 0.88rem;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  color: var(--color-muted-strong);
+  font-family: var(--font-display);
+  font-size: var(--font-14);
+  text-align: center;
   cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+
+.segmentedLabel:hover {
+  color: var(--color-secondary);
 }
 
 .segmentedLabel[data-checked="true"] {
-  background: #ffffff;
-  color: var(--ink);
-  box-shadow: 0 8px 18px rgba(216, 117, 140, 0.16);
+  background: var(--color-secondary);
+  color: var(--color-paper-warm);
 }
 
+/* --- Form fields --- */
 .field {
   display: grid;
-  gap: 7px;
-  margin-top: 14px;
+  gap: var(--space-1);
 }
 
 .field span {
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0;
-}
-
-.fieldRow {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  color: var(--color-secondary);
+  font-family: var(--font-display);
+  font-size: var(--font-14);
 }
 
 .textInput,
 .select {
   width: 100%;
-  min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--ink);
-  font: inherit;
+  min-height: 42px;
+  padding: 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--font-16);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-doodle-sm);
+  box-shadow: var(--shadow-ink-xs);
+  transition:
+    box-shadow var(--motion-fast),
+    transform var(--motion-fast);
+}
+
+.textInput:hover,
+.select:hover {
+  background: var(--color-primary-soft);
 }
 
 .textInput:focus,
 .select:focus {
-  outline: 3px solid rgba(216, 117, 140, 0.18);
-  border-color: var(--coral);
+  outline: 3px solid var(--color-accent-yellow);
+  outline-offset: 2px;
 }
 
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M4 8 Q 10 14 16 8' fill='none' stroke='%23263D5B' stroke-width='2.4' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  background-size: 18px 18px;
+  padding-right: var(--space-6);
+}
+
+/* --- Palette swatch strip --- */
 .swatchStrip {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  margin-top: 14px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-doodle-sm);
+  background: var(--color-paper-warm);
 }
 
 .swatch {
-  height: 34px;
-  border: 1px solid rgba(32, 33, 36, 0.16);
-  border-radius: 8px;
+  height: 32px;
+  border: var(--border-ink-thin);
+  border-radius: var(--radius-doodle-sm);
+  box-shadow: var(--shadow-ink-xs);
 }
 
-@media (max-width: 680px) {
-  .fieldRow,
+@media (max-width: 1080px) {
+  .panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .column:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .panel {
+    grid-template-columns: 1fr;
+  }
+
+  .column:last-child {
+    grid-column: auto;
+  }
+
   .segmented {
     grid-template-columns: 1fr;
+    border-radius: var(--radius-doodle-sm);
   }
 }

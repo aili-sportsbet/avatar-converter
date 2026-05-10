@@ -5,18 +5,12 @@ interface OutputPanelProps {
   activeTab: PromptTab;
   onTabChange: (tab: PromptTab) => void;
   promptText: string;
-  modelSyntax: boolean;
-  onModelSyntaxChange: (enabled: boolean) => void;
-  copyStatus: string;
 }
 
 export function OutputPanel({
   activeTab,
   onTabChange,
   promptText,
-  modelSyntax,
-  onModelSyntaxChange,
-  copyStatus,
 }: OutputPanelProps) {
   return (
     <div className={styles.panel}>
@@ -39,6 +33,15 @@ export function OutputPanel({
         >
           Negative
         </button>
+        <button
+          className={`${styles.tab} ${activeTab === "package" ? styles.active : ""}`}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "package"}
+          onClick={() => onTabChange("package")}
+        >
+          Package
+        </button>
       </div>
       <textarea
         className={styles.textarea}
@@ -47,22 +50,6 @@ export function OutputPanel({
         aria-label="Generated prompt"
         value={promptText}
       />
-      <div className={styles.footer}>
-        <label className={styles.toggle}>
-          <input
-            type="checkbox"
-            checked={modelSyntax}
-            onChange={(e) => onModelSyntaxChange(e.target.checked)}
-            className={styles.checkbox}
-          />
-          <span>Model syntax</span>
-        </label>
-        {copyStatus && (
-          <span className={styles.copyStatus} role="status" aria-live="polite">
-            {copyStatus}
-          </span>
-        )}
-      </div>
     </div>
   );
 }

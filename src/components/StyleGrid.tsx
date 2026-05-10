@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import type { StylePreset } from "../types";
 import styles from "./StyleGrid.module.css";
 
@@ -8,6 +9,10 @@ interface StyleGridProps {
 }
 
 export function StyleGrid({ presets, selectedId, onSelect }: StyleGridProps) {
+  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.scrollIntoView({ block: "nearest", behavior: "instant" });
+  }, []);
+
   return (
     <div className={styles.grid} aria-label="Style choices">
       {presets.map((preset) => (
@@ -18,6 +23,7 @@ export function StyleGrid({ presets, selectedId, onSelect }: StyleGridProps) {
             value={preset.id}
             checked={preset.id === selectedId}
             onChange={() => onSelect(preset)}
+            onFocus={handleFocus}
             className={styles.radio}
           />
           <span className={styles.card} data-selected={preset.id === selectedId}>
@@ -26,7 +32,6 @@ export function StyleGrid({ presets, selectedId, onSelect }: StyleGridProps) {
               style={{
                 "--a": preset.palette[0],
                 "--b": preset.palette[1],
-                "--skin": preset.palette[4],
               } as React.CSSProperties}
             />
             <strong className={styles.name}>{preset.name}</strong>

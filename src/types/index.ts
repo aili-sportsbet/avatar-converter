@@ -3,7 +3,7 @@ export interface StylePreset {
   name: string;
   description: string;
   prompt: string;
-  palette: [string, string, string, string, string];
+  palette: [string, string, string, string];
   ratio: string;
   realism: number;
   polish: number;
@@ -15,15 +15,20 @@ export interface ControlValues {
   identity: string;
   expression: string;
   wardrobe: string;
+  framing: string;
+  camera: string;
   background: string;
   lighting: string;
+  skinTexture: string;
+  hairDetail: string;
+  makeup: string;
+  accessories: string;
   faceMatch: number;
   poseLock: number;
   realism: number;
   polish: number;
   approach: number;
   creative: number;
-  modelSyntax: boolean;
 }
 
-export type PromptTab = "prompt" | "negative";
+export type PromptTab = "prompt" | "negative" | "package";

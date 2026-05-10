@@ -15,6 +15,8 @@ export function RangeSlider({
   max = 10,
   onChange,
 }: RangeSliderProps) {
+  const fillPercent = `${((value - min) / (max - min)) * 100}%`;
+
   return (
     <label className={styles.rangeField}>
       <span className={styles.label}>{label}</span>
@@ -25,6 +27,7 @@ export function RangeSlider({
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         className={styles.range}
+        style={{ ["--fill" as string]: fillPercent }}
       />
       <output className={styles.output}>{value}</output>
     </label>
