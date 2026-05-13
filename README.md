@@ -8,7 +8,7 @@ A web app for generating AI avatar and headshot prompts. Choose from 32 curated 
 - **Format picker** — Headshot, Avatar, or Founder portrait
 - **Subject controls** — target vibe, expression, wardrobe
 - **Scene controls** — background, lighting, color palette preview
-- **Detail sliders** — face match, pose lock, realism, polish, approachability, creativity
+- **Detail sliders** — face match, realism, polish, approachability, creativity
 - **Negative prompt tab** — pre-built exclusions to avoid common AI artifacts
 - **Model syntax toggle** — appends Midjourney-style flags (`--ar`, `--style raw`, `--v 6`)
 - **Randomize & Reset** — quickly explore combinations or return to defaults

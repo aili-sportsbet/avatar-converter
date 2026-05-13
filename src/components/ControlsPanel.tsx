@@ -1,4 +1,5 @@
-import type { ControlValues, StylePreset } from "../types";
+import type { ControlValues, PromptMode, StylePreset } from "../types";
+import { ComboField } from "./ComboField";
 import { StyleGrid } from "./StyleGrid";
 import { RangeSlider } from "./RangeSlider";
 import {
@@ -6,9 +7,9 @@ import {
   backgrounds,
   cameras,
   expressions,
-  formats,
   framings,
   hairDetails,
+  identities,
   lightings,
   makeupStyles,
   skinTextures,
@@ -17,6 +18,8 @@ import {
 import styles from "./ControlsPanel.module.css";
 
 interface ControlsPanelProps {
+  mode: PromptMode;
+  onModeChange: (mode: PromptMode) => void;
   presets: StylePreset[];
   selectedStyleId: string;
   controls: ControlValues;
@@ -25,7 +28,14 @@ interface ControlsPanelProps {
   onReset: () => void;
 }
 
+const modes: { value: PromptMode; label: string }[] = [
+  { value: "preset", label: "Style Preset" },
+  { value: "custom", label: "Custom Prompt" },
+];
+
 export function ControlsPanel({
+  mode,
+  onModeChange,
   presets,
   selectedStyleId,
   controls,
@@ -34,136 +44,151 @@ export function ControlsPanel({
   onReset,
 }: ControlsPanelProps) {
   return (
-    <aside className={styles.panel} aria-label="Prompt controls">
-      {/* Column 1: Format + Style */}
-      <div className={styles.column}>
-        <div className={styles.section}>
-          <div className={styles.sectionHead}>
-            <h2 className={styles.heading}>Format</h2>
-            <button className={styles.ghostButton} type="button" onClick={onReset}>
-              Reset
-            </button>
-          </div>
-          <div className={styles.segmented} role="radiogroup" aria-label="Image type">
-            {formats.map((f) => (
-              <label key={f.value}>
-                <input
-                  type="radio"
-                  name="format"
-                  value={f.value}
-                  checked={controls.format === f.value}
-                  onChange={() => onControlChange("format", f.value)}
-                  className={styles.segmentedRadio}
-                />
-                <span
-                  className={styles.segmentedLabel}
-                  data-checked={controls.format === f.value}
-                >
-                  {f.label}
-                </span>
-              </label>
-            ))}
-          </div>
+    <aside
+      className={styles.panel}
+      data-mode={mode}
+      aria-label="Prompt controls"
+    >
+      {/* Mode toggle + Reset */}
+      <div className={styles.modeBar}>
+        <h2 className={styles.heading}>Mode</h2>
+        <div className={styles.segmented} role="radiogroup" aria-label="Prompt mode">
+          {modes.map((m) => (
+            <label key={m.value}>
+              <input
+                type="radio"
+                name="promptMode"
+                value={m.value}
+                checked={mode === m.value}
+                onChange={() => onModeChange(m.value)}
+                className={styles.segmentedRadio}
+              />
+              <span
+                className={styles.segmentedLabel}
+                data-checked={mode === m.value}
+              >
+                {m.label}
+              </span>
+            </label>
+          ))}
         </div>
-        <div className={styles.section}>
-          <h2 className={styles.heading}>Style</h2>
-          <StyleGrid
-            presets={presets}
-            selectedId={selectedStyleId}
-            onSelect={onStyleSelect}
-          />
-        </div>
+        <button className={styles.ghostButton} type="button" onClick={onReset}>
+          Reset
+        </button>
       </div>
 
-      {/* Column 2: Subject + Scene */}
+      {/* Column 1: Style grid (preset mode only) */}
+      {mode === "preset" && (
+        <div className={styles.column}>
+          <div className={styles.section}>
+            <h2 className={styles.heading}>Style</h2>
+            <StyleGrid
+              presets={presets}
+              selectedId={selectedStyleId}
+              onSelect={onStyleSelect}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Column 2: Subject + Scene (custom mode only) */}
+      {mode === "custom" && (
+        <div className={styles.column}>
+          <div className={styles.section}>
+            <h2 className={styles.heading}>Subject</h2>
+            <ComboField
+              label="Target vibe"
+              value={controls.identity}
+              options={identities}
+              onChange={(v) => onControlChange("identity", v)}
+            />
+            <ComboField
+              label="Expression"
+              value={controls.expression}
+              options={expressions}
+              onChange={(v) => onControlChange("expression", v)}
+            />
+            <ComboField
+              label="Wardrobe"
+              value={controls.wardrobe}
+              options={wardrobes}
+              onChange={(v) => onControlChange("wardrobe", v)}
+            />
+            <ComboField
+              label="Framing"
+              value={controls.framing}
+              options={framings}
+              onChange={(v) => onControlChange("framing", v)}
+            />
+          </div>
+          <div className={styles.section}>
+            <h2 className={styles.heading}>Scene</h2>
+            <ComboField
+              label="Background"
+              value={controls.background}
+              options={backgrounds}
+              onChange={(v) => onControlChange("background", v)}
+            />
+            <ComboField
+              label="Lighting"
+              value={controls.lighting}
+              options={lightings}
+              onChange={(v) => onControlChange("lighting", v)}
+            />
+            <ComboField
+              label="Camera"
+              value={controls.camera}
+              options={cameras}
+              onChange={(v) => onControlChange("camera", v)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Column 3 (custom only): Face Detail */}
+      {mode === "custom" && (
+        <div className={styles.column}>
+          <div className={styles.section}>
+            <h2 className={styles.heading}>Face Detail</h2>
+            <ComboField
+              label="Skin Texture"
+              value={controls.skinTexture}
+              options={skinTextures}
+              onChange={(v) => onControlChange("skinTexture", v)}
+            />
+            <ComboField
+              label="Hair"
+              value={controls.hairDetail}
+              options={hairDetails}
+              onChange={(v) => onControlChange("hairDetail", v)}
+            />
+            <ComboField
+              label="Makeup"
+              value={controls.makeup}
+              options={makeupStyles}
+              onChange={(v) => onControlChange("makeup", v)}
+            />
+            <ComboField
+              label="Accessories"
+              value={controls.accessories}
+              options={accessories}
+              onChange={(v) => onControlChange("accessories", v)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Details — always visible */}
       <div className={styles.column}>
         <div className={styles.section}>
-          <h2 className={styles.heading}>Subject</h2>
-          <label className={styles.field}>
-            <span>Target vibe</span>
-            <input
-              type="text"
-              value={controls.identity}
-              maxLength={80}
-              onChange={(e) => onControlChange("identity", e.target.value)}
-              className={styles.textInput}
-            />
-          </label>
-          <label className={styles.field}>
-            <span>Expression</span>
-            <select
-              value={controls.expression}
-              onChange={(e) => onControlChange("expression", e.target.value)}
-              className={styles.select}
-            >
-              {expressions.map((expr) => (
-                <option key={expr}>{expr}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.field}>
-            <span>Wardrobe</span>
-            <select
-              value={controls.wardrobe}
-              onChange={(e) => onControlChange("wardrobe", e.target.value)}
-              className={styles.select}
-            >
-              {wardrobes.map((w) => (
-                <option key={w}>{w}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.field}>
-            <span>Framing</span>
-            <select
-              value={controls.framing}
-              onChange={(e) => onControlChange("framing", e.target.value)}
-              className={styles.select}
-            >
-              {framings.map((framing) => (
-                <option key={framing}>{framing}</option>
-              ))}
-            </select>
-          </label>
+          <h2 className={styles.heading}>Details</h2>
+          <RangeSlider label="Face match" value={controls.faceMatch} onChange={(v) => onControlChange("faceMatch", v)} />
+          <RangeSlider label="Realism" value={controls.realism} onChange={(v) => onControlChange("realism", v)} />
+          <RangeSlider label="Polish" value={controls.polish} onChange={(v) => onControlChange("polish", v)} />
+          <RangeSlider label="Approachability" value={controls.approach} onChange={(v) => onControlChange("approach", v)} />
+          <RangeSlider label="Creativity" value={controls.creative} onChange={(v) => onControlChange("creative", v)} />
         </div>
-        <div className={styles.section}>
-          <h2 className={styles.heading}>Scene</h2>
-          <label className={styles.field}>
-            <span>Background</span>
-            <select
-              value={controls.background}
-              onChange={(e) => onControlChange("background", e.target.value)}
-              className={styles.select}
-            >
-              {backgrounds.map((bg) => (
-                <option key={bg}>{bg}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.field}>
-            <span>Lighting</span>
-            <select
-              value={controls.lighting}
-              onChange={(e) => onControlChange("lighting", e.target.value)}
-              className={styles.select}
-            >
-              {lightings.map((l) => (
-                <option key={l}>{l}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.field}>
-            <span>Camera</span>
-            <select
-              value={controls.camera}
-              onChange={(e) => onControlChange("camera", e.target.value)}
-              className={styles.select}
-            >
-              {cameras.map((camera) => (
-                <option key={camera}>{camera}</option>
-              ))}
-            </select>
-          </label>
+        {mode === "preset" && (
           <PaletteStrip
             palette={
               presets.find((p) => p.id === selectedStyleId)?.palette ?? [
@@ -174,71 +199,7 @@ export function ControlsPanel({
               ]
             }
           />
-        </div>
-      </div>
-
-      {/* Column 3: Face Detail + Details */}
-      <div className={styles.column}>
-        <div className={styles.section}>
-          <h2 className={styles.heading}>Face Detail</h2>
-          <label className={styles.field}>
-            <span>Skin Texture</span>
-            <select
-              value={controls.skinTexture}
-              onChange={(e) => onControlChange("skinTexture", e.target.value)}
-              className={styles.select}
-            >
-              {skinTextures.map((texture) => (
-                <option key={texture}>{texture}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.field}>
-            <span>Hair</span>
-            <select
-              value={controls.hairDetail}
-              onChange={(e) => onControlChange("hairDetail", e.target.value)}
-              className={styles.select}
-            >
-              {hairDetails.map((hair) => (
-                <option key={hair}>{hair}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.field}>
-            <span>Makeup</span>
-            <select
-              value={controls.makeup}
-              onChange={(e) => onControlChange("makeup", e.target.value)}
-              className={styles.select}
-            >
-              {makeupStyles.map((makeup) => (
-                <option key={makeup}>{makeup}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.field}>
-            <span>Accessories</span>
-            <select
-              value={controls.accessories}
-              onChange={(e) => onControlChange("accessories", e.target.value)}
-              className={styles.select}
-            >
-              {accessories.map((accessory) => (
-                <option key={accessory}>{accessory}</option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div className={styles.section}>
-          <h2 className={styles.heading}>Details</h2>
-          <RangeSlider label="Face match" value={controls.faceMatch} onChange={(v) => onControlChange("faceMatch", v)} />
-          <RangeSlider label="Pose lock" value={controls.poseLock} onChange={(v) => onControlChange("poseLock", v)} />
-          <RangeSlider label="Realism" value={controls.realism} onChange={(v) => onControlChange("realism", v)} />
-          <RangeSlider label="Polish" value={controls.polish} onChange={(v) => onControlChange("polish", v)} />
-          <RangeSlider label="Approachability" value={controls.approach} onChange={(v) => onControlChange("approach", v)} />
-          <RangeSlider label="Creativity" value={controls.creative} onChange={(v) => onControlChange("creative", v)} />
-        </div>
+        )}
       </div>
     </aside>
   );

@@ -4,6 +4,22 @@
   gap: var(--space-5);
 }
 
+.panel[data-mode="preset"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.modeBar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-ink);
+  border-radius: var(--radius-doodle-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-ink-sm);
+}
+
 .column {
   display: flex;
   flex-direction: column;
@@ -65,7 +81,8 @@
 /* --- Segmented control --- */
 .segmented {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex: 1;
   gap: var(--space-1);
   padding: var(--space-1);
   border: var(--border-ink-thin);
@@ -182,22 +199,46 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .panel[data-mode="preset"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .column:last-child {
     grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 640px) {
-  .panel {
+  .panel,
+  .panel[data-mode="preset"] {
     grid-template-columns: 1fr;
+    gap: var(--space-3);
   }
 
   .column:last-child {
     grid-column: auto;
   }
 
-  .segmented {
-    grid-template-columns: 1fr;
-    border-radius: var(--radius-doodle-sm);
+  .modeBar {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .modeBar .heading {
+    display: none;
+  }
+
+  .segmentedLabel {
+    min-height: 32px;
+    font-size: 13px;
+  }
+
+  .section {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .heading {
+    font-size: var(--font-18);
   }
 }

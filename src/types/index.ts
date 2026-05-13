@@ -10,8 +10,9 @@ export interface StylePreset {
   creativity: number;
 }
 
+export type PromptMode = "preset" | "custom";
+
 export interface ControlValues {
-  format: string;
   identity: string;
   expression: string;
   wardrobe: string;
@@ -24,7 +25,6 @@ export interface ControlValues {
   makeup: string;
   accessories: string;
   faceMatch: number;
-  poseLock: number;
   realism: number;
   polish: number;
   approach: number;

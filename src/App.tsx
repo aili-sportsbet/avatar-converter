@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import type { ControlValues, PromptTab, StylePreset } from "./types";
+import type { ControlValues, PromptMode, PromptTab, StylePreset } from "./types";
 import {
   accessories,
   backgrounds,
@@ -34,6 +34,7 @@ function randomInRange(min: number, max: number): number {
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<"studio" | "guide">("studio");
+  const [mode, setMode] = useState<PromptMode>("preset");
   const [selectedStyleId, setSelectedStyleId] = useState("studio");
   const [controls, setControls] = useState<ControlValues>(defaultControls);
   const [activeTab, setActiveTab] = useState<PromptTab>("prompt");
@@ -48,13 +49,13 @@ export function App() {
 
   const promptText = useMemo(() => {
     if (activeTab === "prompt") {
-      return buildPrompt(selectedStyle, controls);
+      return buildPrompt(mode, selectedStyle, controls);
     }
     if (activeTab === "package") {
-      return buildPromptPackage(selectedStyle, controls);
+      return buildPromptPackage(mode, selectedStyle, controls);
     }
     return buildNegativePrompt();
-  }, [activeTab, selectedStyle, controls, buildPrompt, buildNegativePrompt, buildPromptPackage]);
+  }, [activeTab, mode, selectedStyle, controls, buildPrompt, buildNegativePrompt, buildPromptPackage]);
 
   const updateControl = useCallback(
     <K extends keyof ControlValues>(key: K, value: ControlValues[K]) => {
@@ -74,35 +75,48 @@ export function App() {
   }, []);
 
   const handleReset = useCallback(() => {
+    setMode("preset");
     setSelectedStyleId("studio");
     setActiveTab("prompt");
     setControls({ ...defaultControls });
   }, []);
 
   const handleRandomize = useCallback(() => {
-    const style = pickRandom(stylePresets);
-    setSelectedStyleId(style.id);
-    setControls({
-      format: pickRandom(["professional headshot", "profile avatar", "founder portrait"]),
-      identity: pickRandom(identities),
-      expression: pickRandom(expressions),
-      wardrobe: pickRandom(wardrobes),
-      framing: pickRandom(framings),
-      camera: pickRandom(cameras),
-      background: pickRandom(backgrounds),
-      lighting: pickRandom(lightings),
-      skinTexture: pickRandom(skinTextures),
-      hairDetail: pickRandom(hairDetails),
-      makeup: pickRandom(makeupStyles),
-      accessories: pickRandom(accessories),
+    const detailSliders = {
       faceMatch: randomInRange(8, 10),
-      poseLock: randomInRange(5, 9),
       realism: randomInRange(6, 10),
       polish: randomInRange(5, 10),
       approach: randomInRange(4, 10),
       creative: randomInRange(2, 10),
-    });
-  }, []);
+    };
+
+    if (mode === "preset") {
+      const style = pickRandom(stylePresets);
+      setSelectedStyleId(style.id);
+      setControls((prev) => ({
+        ...prev,
+        ...detailSliders,
+        realism: style.realism,
+        polish: style.polish,
+        creative: style.creativity,
+      }));
+    } else {
+      setControls({
+        identity: pickRandom(identities),
+        expression: pickRandom(expressions),
+        wardrobe: pickRandom(wardrobes),
+        framing: pickRandom(framings),
+        camera: pickRandom(cameras),
+        background: pickRandom(backgrounds),
+        lighting: pickRandom(lightings),
+        skinTexture: pickRandom(skinTextures),
+        hairDetail: pickRandom(hairDetails),
+        makeup: pickRandom(makeupStyles),
+        accessories: pickRandom(accessories),
+        ...detailSliders,
+      });
+    }
+  }, [mode]);
 
   const handleCopy = useCallback(() => {
     copy(promptText);
@@ -121,6 +135,8 @@ export function App() {
       {currentPage === "studio" ? (
         <section className={styles.workspace} aria-label="Prompt generator workspace">
           <ControlsPanel
+            mode={mode}
+            onModeChange={setMode}
             presets={stylePresets}
             selectedStyleId={selectedStyleId}
             controls={controls}
@@ -130,7 +146,10 @@ export function App() {
           />
 
           <div className={styles.bottomRow}>
-            <Portrait style={selectedStyle} approachValue={controls.approach} />
+            <Portrait
+              style={mode === "preset" ? selectedStyle : null}
+              approachValue={controls.approach}
+            />
             <OutputPanel
               activeTab={activeTab}
               onTabChange={setActiveTab}
