@@ -33,21 +33,21 @@
   --color-ink: var(--color-secondary);
   --color-line: rgba(38, 61, 91, 0.18);
 
-  /* --- Spacing scale: 4 / 8 / 12 / 16 / 24 / 32 --- */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
+  /* --- Spacing scale: fluid, grows gently with viewport --- */
+  --space-1: clamp(3px, 0.25vw + 2px, 4px);
+  --space-2: clamp(6px, 0.4vw + 4px, 8px);
+  --space-3: clamp(8px, 0.6vw + 6px, 12px);
+  --space-4: clamp(12px, 1vw + 8px, 16px);
+  --space-5: clamp(16px, 1.6vw + 10px, 24px);
+  --space-6: clamp(20px, 2.2vw + 12px, 32px);
 
-  /* --- Type scale: 14 / 16 / 18 / 24 / 32 / 40 --- */
-  --font-14: 0.875rem;
-  --font-16: 1rem;
-  --font-18: 1.125rem;
-  --font-24: 1.5rem;
-  --font-32: 2rem;
-  --font-40: 2.5rem;
+  /* --- Fluid type scale (min, fluid, max) --- */
+  --font-14: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --font-16: clamp(0.9375rem, 0.88rem + 0.25vw, 1rem);
+  --font-18: clamp(1rem, 0.94rem + 0.32vw, 1.125rem);
+  --font-24: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+  --font-32: clamp(1.625rem, 1.35rem + 1.3vw, 2rem);
+  --font-40: clamp(2rem, 1.55rem + 2.2vw, 2.5rem);
 
   /* --- Typography --- */
   --font-display:
@@ -91,7 +91,8 @@ html {
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   overflow-x: clip;
   color: var(--color-text);
   font-family: var(--font-body);

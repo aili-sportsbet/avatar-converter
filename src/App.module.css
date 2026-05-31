@@ -1,7 +1,11 @@
 .shell {
-  width: min(1480px, calc(100vw - var(--space-6)));
+  width: 100%;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: var(--space-4) 0 var(--space-6);
+  padding: var(--space-4) clamp(var(--space-3), 2.5vw, var(--space-6))
+    var(--space-6);
+  container-type: inline-size;
+  container-name: shell;
 }
 
 .workspace {
@@ -9,25 +13,28 @@
   gap: var(--space-5);
 }
 
+/* Mobile-first: stack everything, then split at wider viewports */
 .bottomRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  grid-template-columns: 1fr;
   gap: var(--space-5);
   align-items: stretch;
 }
 
-@media (max-width: 960px) {
+@container shell (min-width: 760px) {
   .bottomRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
   }
 }
 
-@media (max-width: 680px) {
-  .shell {
-    width: min(100vw - var(--space-3), 620px);
-    padding-top: var(--space-3);
+@container shell (min-width: 1100px) {
+  .bottomRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   }
+}
 
+/* Tighten gaps on small phones */
+@media (max-width: 480px) {
   .workspace,
   .bottomRow {
     gap: var(--space-4);

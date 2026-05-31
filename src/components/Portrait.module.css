@@ -8,6 +8,8 @@
   overflow: hidden;
   height: 100%;
   min-height: 420px;
+  container-type: inline-size;
+  container-name: portrait;
 }
 
 .stage {
@@ -16,6 +18,7 @@
   justify-content: center;
   flex: 1;
   min-height: 260px;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background:
     /* hand-drawn doodles overlaid on the stage */
@@ -212,22 +215,21 @@
   font-size: var(--font-14);
 }
 
-@media (max-width: 860px) {
-  .stage {
-    height: 280px;
-  }
-
+/* Scale the portrait to its container, not the viewport */
+@container portrait (max-width: 520px) {
   .portrait {
     transform: scale(0.58);
   }
 }
 
-@media (max-width: 680px) {
-  .stage {
-    height: 240px;
-  }
-
+@container portrait (max-width: 380px) {
   .portrait {
     transform: scale(0.5);
+  }
+}
+
+@container portrait (max-width: 300px) {
+  .portrait {
+    transform: scale(0.44);
   }
 }

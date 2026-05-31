@@ -39,7 +39,7 @@ export function usePromptBuilder() {
       const quality = buildDetailsBlock(controls);
 
       return [
-        `Transform the user's provided reference image into a styled portrait. Use the reference image as the source identity, not as loose inspiration.`,
+        `Transform the reference image into a styled portrait. Use the reference image as the source identity, not as loose inspiration.`,
         `Identity preservation: ${faceMatch}; maintain the exact facial structure, age impression, skin tone, hairstyle direction, and recognizable key features. Do not change the person into a different model, celebrity, gender, ethnicity, or age.`,
         `Quality: ${quality}; ultra-realistic studio portrait, high-resolution, sharp focus, refined film grain, professional color grading.`,
         `Style direction: ${style.prompt}. Palette cues: ${style.palette.join(", ")}. Aspect ratio ${style.ratio}.`,
@@ -58,7 +58,7 @@ export function usePromptBuilder() {
       const quality = buildDetailsBlock(controls);
 
       return [
-        `Subject: Transform the user's provided reference image into a portrait with a ${targetVibe} vibe. Use the reference image as the source identity, not as loose inspiration.`,
+        `Subject: Transform the reference image into a portrait with a ${targetVibe} vibe. Use the reference image as the source identity, not as loose inspiration.`,
         `Identity preservation: ${faceMatch}; maintain the exact facial structure, age impression, skin tone, hairstyle direction, and recognizable key features. Do not change the person into a different model, celebrity, gender, ethnicity, or age.`,
         `Pose and framing: ${controls.framing}; keep the original head angle and gaze direction unless the chosen style requires a subtle refinement.`,
         `Clothing and styling: ${controls.wardrobe}; ${controls.hairDetail}; ${controls.makeup}; ${controls.accessories}.`,

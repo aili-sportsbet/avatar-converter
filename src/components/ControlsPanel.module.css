@@ -1,11 +1,25 @@
 .panel {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--space-5);
+  container-type: inline-size;
+  container-name: controls;
 }
 
-.panel[data-mode="preset"] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+@container controls (min-width: 640px) {
+  .panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container controls (min-width: 1000px) {
+  .panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .panel[data-mode="preset"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .modeBar {
@@ -194,31 +208,15 @@
   box-shadow: var(--shadow-ink-xs);
 }
 
-@media (max-width: 1080px) {
-  .panel {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .panel[data-mode="preset"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
+/* When the controls span only ~2 columns, let the last column flow full-width */
+@container controls (min-width: 640px) and (max-width: 999.98px) {
   .column:last-child {
     grid-column: 1 / -1;
   }
 }
 
-@media (max-width: 640px) {
-  .panel,
-  .panel[data-mode="preset"] {
-    grid-template-columns: 1fr;
-    gap: var(--space-3);
-  }
-
-  .column:last-child {
-    grid-column: auto;
-  }
-
+/* Small screens: tighten chrome and drop the modeBar heading for space */
+@media (max-width: 480px) {
   .modeBar {
     padding: var(--space-2) var(--space-3);
     gap: var(--space-2);
@@ -229,8 +227,7 @@
   }
 
   .segmentedLabel {
-    min-height: 32px;
-    font-size: 13px;
+    min-height: 36px;
   }
 
   .section {
